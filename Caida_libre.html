@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Caída Libre</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #eef2f3;
+    }
+    .seccion {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    label, input {
+      display: block;
+      margin: 10px 0;
+      width: 100%;
+    }
+    input {
+      padding: 8px;
+    }
+    .radio {
+      margin: 10px 0;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 10px 5px 0 0;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      color: white;
+      background-color: #3498db;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    .limpiar {
+      background-color: #e74c3c;
+    }
+    .limpiar:hover {
+      background-color: #c0392b;
+    }
+    .resultado {
+      margin-top: 20px;
+      white-space: pre-line;
+      font-weight: bold;
+      background: #ecf0f1;
+      padding: 15px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="seccion">
+  <h1>Caída Libre</h1>
+
+  <div class="radio">
+    <label><input type="radio" name="escenario" value="subiendo"> Subiendo</label>
+    <label><input type="radio" name="escenario" value="bajando"> Bajando</label>
+  </div>
+
+  <label for="vi">Velocidad inicial (vi):</label>
+  <input type="number" id="vi" step="any">
+
+  <label for="vf">Velocidad final (vf):</label>
+  <input type="number" id="vf" step="any">
+
+  <label for="t">Tiempo (t):</label>
+  <input type="number" id="t" step="any">
+
+  <label for="y">Altura (y):</label>
+  <input type="number" id="y" step="any">
+
+  <button onclick="calcular()">Calcular</button>
+  <button class="limpiar" onclick="limpiar()">Limpiar</button>
+
+  <div id="resultado" class="resultado"></div>
+</div>
+
+<script>
+  const g = 9.8;
+
+  function red2(x) { return x.toFixed(2); }
+  function red4(x) { return x.toFixed(4); }
+
+  function calcular() {
+    const escenario = document.querySelector('input[name="escenario"]:checked');
+    const vi = parseFloat(document.getElementById("vi").value);
+    const vf = parseFloat(document.getElementById("vf").value);
+    const t  = parseFloat(document.getElementById("t").value);
+    const y  = parseFloat(document.getElementById("y").value);
+    const res = document.getElementById("resultado");
+
+    if (!escenario) {
+      res.textContent = "Por favor, selecciona un escenario.";
+      return;
+    }
+
+    if ([vi, vf, t, y].some(val => val < 0)) {
+      res.textContent = "No se permiten valores negativos.";
+      return;
+    }
+
+    let salida = "";
+    let formulas = "";
+
+    if (escenario.value === "subiendo") {
+      let count = [!isNaN(vi), !isNaN(t), !isNaN(y)].filter(v => v).length;
+      if (count !== 1) {
+        res.textContent = "Por favor, ingresa solo un dato válido para el escenario Subiendo.";
+        return;
+      }
+
+      if (!isNaN(vi)) {
+        const altura = vi ** 2 / (2 * g);
+        const tiempo = Math.sqrt((2 * altura) / g);
+        salida = `Altura máxima: ${red2(altura)} m\nTiempo subiendo: ${red4(tiempo)} s\nVelocidad final = 0 m/s`;
+        formulas = "Fórmulas:\nymax = vi² / 2g\nt = √(2ymax / g)";
+      } else if (!isNaN(t)) {
+        const altura = (g * t ** 2) / 2;
+        const viCalc = g * t;
+        salida = `Altura máxima: ${red2(altura)} m\nVelocidad inicial: ${red4(viCalc)} m/s\nVelocidad final = 0 m/s`;
+        formulas = "Fórmulas:\nymax = (g*t²)/2\nvi = g*t";
+      } else if (!isNaN(y)) {
+        const tiempo = Math.sqrt((2 * y) / g);
+        const viCalc = g * tiempo;
+        salida = `Tiempo subiendo: ${red4(tiempo)} s\nVelocidad inicial: ${red2(viCalc)} m/s\nVelocidad final = 0 m/s`;
+        formulas = "Fórmulas:\nt = √(2y / g)\nvi = g*t";
+      }
+
+    } else if (escenario.value === "bajando") {
+      let casos = 0;
+
+      if (!isNaN(vi) && !isNaN(t)) {
+        casos++;
+        const altura = vi * t + (g * t ** 2) / 2;
+        const vfCalc = vi + g * t;
+        salida += `Altura: ${red2(altura)} m\nVelocidad final: ${red2(vfCalc)} m/s\n`;
+        formulas += "Fórmulas:\ny = vi*t + (g*t²)/2\nvf = vi + g*t\n";
+      }
+      if (!isNaN(vi) && !isNaN(y)) {
+        casos++;
+        const vfCalc = Math.sqrt(vi ** 2 + 2 * g * y);
+        const tiempo = (vfCalc - vi) / g;
+        salida += `Velocidad final: ${red2(vfCalc)} m/s\nTiempo: ${red4(tiempo)} s\n`;
+        formulas += "Fórmulas:\nvf = √(vi² + 2gy)\nt = (vf - vi) / g\n";
+      }
+      if (!isNaN(vi) && !isNaN(vf)) {
+        casos++;
+        const tiempo = (vf - vi) / g;
+        const altura = (vf ** 2 - vi ** 2) / (2 * g);
+        salida += `Tiempo: ${red4(tiempo)} s\nAltura: ${red2(altura)} m\n`;
+        formulas += "Fórmulas:\nt = (vf - vi) / g\ny = (vf² - vi²) / (2g)\n";
+      }
+
+      if (casos !== 1) {
+        res.textContent = "Por favor, ingresa exactamente dos datos válidos para el escenario Bajando.";
+        return;
+      }
+    }
+
+    res.textContent = `${salida}\n\n${formulas}`;
+  }
+
+  function limpiar() {
+    ["vi", "vf", "t", "y"].forEach(id => document.getElementById(id).value = "");
+    document.getElementById("resultado").textContent = "";
+    const radios = document.querySelectorAll('input[name="escenario"]');
+    radios.forEach(r => r.checked = false);
+  }
+</script>
+
+</body>
+</html>

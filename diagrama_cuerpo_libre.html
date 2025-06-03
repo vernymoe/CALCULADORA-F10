@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Diagrama de Cuerpo Libre</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f2f2f2;
+    }
+    .seccion {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    label, input {
+      display: block;
+      margin: 10px 0;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+    }
+    button {
+      margin-top: 15px;
+      margin-right: 10px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      color: white;
+      background-color: #3498db;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    .limpiar {
+      background-color: #e74c3c;
+    }
+    .limpiar:hover {
+      background-color: #c0392b;
+    }
+    .resultado {
+      margin-top: 20px;
+      background-color: #ecf0f1;
+      padding: 15px;
+      border-radius: 5px;
+      white-space: pre-line;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<div class="seccion">
+  <h1>Diagrama de Cuerpo Libre</h1>
+
+  <label for="masa">Masa (kg):</label>
+  <input type="number" id="masa" step="any">
+
+  <label for="fuerza">Fuerza aplicada (N):</label>
+  <input type="number" id="fuerza" step="any">
+
+  <label for="angulo">Ángulo de aplicación (°):</label>
+  <input type="number" id="angulo" step="any">
+
+  <label for="friccion">Coeficiente de fricción (μ):</label>
+  <input type="number" id="friccion" step="any">
+
+  <button onclick="calcular()">Calcular</button>
+  <button class="limpiar" onclick="limpiar()">Limpiar</button>
+
+  <div id="resultado" class="resultado">Resultados aquí</div>
+</div>
+
+<script>
+  function calcular() {
+    const m = parseFloat(document.getElementById("masa").value);
+    const F = parseFloat(document.getElementById("fuerza").value);
+    const theta = parseFloat(document.getElementById("angulo").value);
+    const mu = parseFloat(document.getElementById("friccion").value);
+    const g = 9.8;
+    const res = document.getElementById("resultado");
+
+    if ([m, F, theta, mu].some(isNaN)) {
+      res.textContent = "Por favor, ingrese valores válidos en todos los campos.";
+      return;
+    }
+
+    if (theta < 0 || theta > 90) {
+      res.textContent = "El ángulo debe estar entre 0° y 90°.";
+      return;
+    }
+
+    const rad = theta * Math.PI / 180;
+    const peso = m * g;
+
+    const Fy = F * Math.sin(rad);
+    const Fx = F * Math.cos(rad);
+    const normal = peso - Fy;
+
+    if (normal < 0) {
+      res.textContent = "La caja se levanta, disminuya la fuerza o el ángulo.";
+      return;
+    }
+
+    const friccion = mu * normal;
+    const neta = Fx - friccion;
+
+    if (Fx < friccion) {
+      res.textContent = "Objeto en reposo, aumente la fuerza o disminuya el ángulo.";
+    } else if (Fx === friccion) {
+      res.textContent = "El objeto se mueve a velocidad constante. Aceleración = 0 m/s²";
+    } else {
+      const aceleracion = neta / m;
+      res.textContent = `
+Fx = Fcos(θ) = ${Fx.toFixed(2)} N
+Fy = Fsen(θ) = ${Fy.toFixed(2)} N
+Peso = m·g = ${peso.toFixed(2)} N
+Fuerza normal = Peso - Fy = ${normal.toFixed(2)} N
+Fricción = μ·N = ${friccion.toFixed(2)} N
+Fuerza neta = Fx - fricción = ${neta.toFixed(2)} N
+Aceleración = Fn / m = ${aceleracion.toFixed(2)} m/s²`;
+    }
+  }
+
+  function limpiar() {
+    ["masa", "fuerza", "angulo", "friccion"].forEach(id => document.getElementById(id).value = "");
+    document.getElementById("resultado").textContent = "Resultados aquí";
+  }
+</script>
+
+</body>
+</html>

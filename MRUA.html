@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Movimiento Rectilíneo Uniformemente Acelerado</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+    .seccion {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #2c3e50;
+      text-align: center;
+    }
+    label, input {
+      display: block;
+      margin: 10px 0;
+      width: 100%;
+    }
+    input {
+      padding: 8px;
+    }
+    button {
+      padding: 10px 20px;
+      margin-top: 15px;
+      margin-right: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      color: white;
+      background-color: #3498db;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    .limpiar {
+      background-color: #e74c3c;
+    }
+    .limpiar:hover {
+      background-color: #c0392b;
+    }
+    .resultado {
+      margin-top: 20px;
+      font-weight: bold;
+      white-space: pre-line;
+      background: #ecf0f1;
+      padding: 10px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="seccion">
+  <h1>MRUA</h1>
+
+  <label for="vi">Velocidad inicial (vi):</label>
+  <input type="number" id="vi" step="any">
+
+  <label for="vf">Velocidad final (vf):</label>
+  <input type="number" id="vf" step="any">
+
+  <label for="d">Distancia (d):</label>
+  <input type="number" id="d" step="any">
+
+  <label for="t">Tiempo (t):</label>
+  <input type="number" id="t" step="any">
+
+  <label for="a">Aceleración (a):</label>
+  <input type="number" id="a" step="any">
+
+  <button onclick="calcularMRUA()">Calcular</button>
+  <button class="limpiar" onclick="limpiarCampos()">Limpiar</button>
+
+  <div id="resultado" class="resultado"></div>
+</div>
+
+<script>
+  function calcularMRUA() {
+    const vi = parseFloat(document.getElementById("vi").value);
+    const vf = parseFloat(document.getElementById("vf").value);
+    const d  = parseFloat(document.getElementById("d").value);
+    const t  = parseFloat(document.getElementById("t").value);
+    const a  = parseFloat(document.getElementById("a").value);
+    const resultado = document.getElementById("resultado");
+
+    const inputs = [vi, vf, d, t, a].filter(v => !isNaN(v));
+    if (inputs.length !== 3) {
+      resultado.textContent = "Debe ingresar exactamente 3 valores.";
+      return;
+    }
+
+    try {
+      let res = "";
+      const pow = Math.pow;
+      const sqrt = Math.sqrt;
+
+      if (!isNaN(vi) && !isNaN(vf) && !isNaN(t)) {
+        const aResult = (vf - vi) / t;
+        const dResult = ((vi + vf) / 2) * t;
+        res = `Fórmulas:\na = (vf - vi) / t\nd = ((vi + vf)/2) * t\n\nResultado:\na = ${aResult} m/s²\nd = ${dResult} m`;
+      } else if (!isNaN(vi) && !isNaN(vf) && !isNaN(a)) {
+        const tResult = (vf - vi) / a;
+        const dResult = (vf**2 - vi**2) / (2 * a);
+        res = `Fórmulas:\nt = (vf - vi)/a\nd = (vf² - vi²)/(2a)\n\nResultado:\nt = ${tResult} s\nd = ${dResult} m`;
+      } else if (!isNaN(vi) && !isNaN(vf) && !isNaN(d)) {
+        const aResult = (vf**2 - vi**2) / (2 * d);
+        const tResult = (2 * d) / (vi + vf);
+        res = `Fórmulas:\na = (vf² - vi²)/(2d)\nt = (2d)/(vi + vf)\n\nResultado:\na = ${aResult} m/s²\nt = ${tResult} s`;
+      } else if (!isNaN(vi) && !isNaN(a) && !isNaN(d)) {
+        const vfResult = sqrt(vi**2 + 2 * a * d);
+        const tResult = (vfResult - vi) / a;
+        res = `Fórmulas:\nvf = √(vi² + 2ad)\nt = (vf - vi)/a\n\nResultado:\nvf = ${vfResult} m/s\nt = ${tResult} s`;
+      } else if (!isNaN(vi) && !isNaN(a) && !isNaN(t)) {
+        const vfResult = vi + a * t;
+        const dResult = vi * t + (a * t**2) / 2;
+        res = `Fórmulas:\nvf = vi + at\nd = vit + ½at²\n\nResultado:\nvf = ${vfResult} m/s\nd = ${dResult} m`;
+      } else if (!isNaN(vf) && !isNaN(a) && !isNaN(t)) {
+        const viResult = vf - a * t;
+        const dResult = ((viResult + vf) / 2) * t;
+        res = `Fórmulas:\nvi = vf - at\nd = ((vi + vf)/2) * t\n\nResultado:\nvi = ${viResult} m/s\nd = ${dResult} m`;
+      } else if (!isNaN(vf) && !isNaN(a) && !isNaN(d)) {
+        const viResult = sqrt(vf**2 - 2 * a * d);
+        const tResult = (vf - viResult) / a;
+        res = `Fórmulas:\nvi = √(vf² - 2ad)\nt = (vf - vi)/a\n\nResultado:\nvi = ${viResult} m/s\nt = ${tResult} s`;
+      } else if (!isNaN(vf) && !isNaN(t) && !isNaN(d)) {
+        const viResult = (2 * d / t) - vf;
+        const aResult = (vf - viResult) / t;
+        res = `Fórmulas:\nvi = (2d / t) - vf\na = (vf - vi)/t\n\nResultado:\nvi = ${viResult} m/s\na = ${aResult} m/s²`;
+      } else if (!isNaN(d) && !isNaN(t) && !isNaN(a)) {
+        const viResult = (d - (a * t**2) / 2) / t;
+        const vfResult = viResult + a * t;
+        res = `Fórmulas:\nvi = (d - ½at²)/t\nvf = vi + at\n\nResultado:\nvi = ${viResult} m/s\nvf = ${vfResult} m/s`;
+      } else if (!isNaN(d) && !isNaN(t) && !isNaN(vi)) {
+        const vfResult = (2 * d / t) - vi;
+        const aResult = ((d - vi * t) * 2) / t**2;
+        res = `Fórmulas:\nvf = (2d / t) - vi\na = 2(d - vit)/t²\n\nResultado:\nvf = ${vfResult} m/s\na = ${aResult} m/s²`;
+      } else {
+        res = "Valores inválidos.";
+      }
+
+      resultado.textContent = res;
+
+    } catch (e) {
+      resultado.textContent = "Error en los cálculos.";
+    }
+  }
+
+  function limpiarCampos() {
+    document.getElementById("vi").value = "";
+    document.getElementById("vf").value = "";
+    document.getElementById("d").value = "";
+    document.getElementById("t").value = "";
+    document.getElementById("a").value = "";
+    document.getElementById("resultado").textContent = "";
+  }
+</script>
+
+</body>
+</html>

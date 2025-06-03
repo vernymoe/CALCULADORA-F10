@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Vectores</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+    h1 {
+      color: #2c3e50;
+    }
+    .seccion {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 500px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    label, select, input {
+      display: block;
+      margin: 10px 0;
+      width: 100%;
+      padding: 8px;
+    }
+    button {
+      padding: 10px 20px;
+      margin-top: 15px;
+      margin-right: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      color: white;
+      background-color: #3498db;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    .limpiar {
+      background-color: #e74c3c;
+    }
+    .limpiar:hover {
+      background-color: #c0392b;
+    }
+    .resultado {
+      margin-top: 20px;
+      font-weight: bold;
+      white-space: pre-line;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="seccion">
+    <h1>Cálculo de Vectores</h1>
+
+    <label for="tipoVector">Tipo de vector:</label>
+    <select id="tipoVector">
+      <option>(x, y)</option>
+      <option>(r, θ)</option>
+      <option>(r, x)</option>
+      <option>(r, y)</option>
+      <option>(x, θ)</option>
+      <option>(y, θ)</option>
+    </select>
+
+    <label for="valor1">Valor 1:</label>
+    <input type="number" id="valor1" step="any">
+
+    <label for="valor2">Valor 2:</label>
+    <input type="number" id="valor2" step="any">
+
+    <button onclick="calcularVector()">Calcular</button>
+    <button class="limpiar" onclick="limpiarCampos()">Limpiar</button>
+
+    <div id="resultado" class="resultado"></div>
+  </div>
+
+  <script>
+    function redondear(valor, decimales) {
+      return valor.toFixed(decimales);
+    }
+
+    function calcularVector() {
+      const tipo = document.getElementById("tipoVector").value;
+      const valor1 = parseFloat(document.getElementById("valor1").value);
+      const valor2 = parseFloat(document.getElementById("valor2").value);
+      const resultado = document.getElementById("resultado");
+
+      if (isNaN(valor1) || isNaN(valor2)) {
+        resultado.textContent = "Por favor, ingrese valores válidos.";
+        return;
+      }
+
+      if ((tipo === "(r, θ)" || tipo === "(r, x)" || tipo === "(r, y)") && valor1 < 0) {
+        resultado.textContent = "Error: La magnitud r no puede ser negativa.";
+        return;
+      }
+
+      let res = "";
+
+      switch (tipo) {
+        case "(x, y)":
+          const x1 = valor1;
+          const y1 = valor2;
+          const r1 = Math.sqrt(x1 ** 2 + y1 ** 2);
+          const theta1 = Math.atan2(y1, x1) * 180 / Math.PI;
+          res += `r = √(x² + y²) = ${redondear(r1, 4)}\n`;
+          res += `θ = arctan(y/x) = ${redondear(theta1, 2)}°`;
+          break;
+
+        case "(r, θ)":
+          const r2 = valor1;
+          const thetaRad2 = valor2 * Math.PI / 180;
+          const x2 = r2 * Math.cos(thetaRad2);
+          const y2 = r2 * Math.sin(thetaRad2);
+          res += `x = r × cos(θ) = ${redondear(x2, 4)}\n`;
+          res += `y = r × sin(θ) = ${redondear(y2, 4)}`;
+          break;
+
+        case "(r, x)":
+          const r3 = valor1;
+          const x3 = valor2;
+          const theta3 = Math.acos(x3 / r3) * 180 / Math.PI;
+          const y3 = r3 * Math.sin(theta3 * Math.PI / 180);
+          res += `θ = arccos(x/r) = ${redondear(theta3, 2)}°\n`;
+          res += `y = r × sin(θ) = ${redondear(y3, 4)}`;
+          break;
+
+        case "(r, y)":
+          const r4 = valor1;
+          const y4 = valor2;
+          const theta4 = Math.asin(y4 / r4) * 180 / Math.PI;
+          const x4 = r4 * Math.cos(theta4 * Math.PI / 180);
+          res += `θ = arcsin(y/r) = ${redondear(theta4, 2)}°\n`;
+          res += `x = r × cos(θ) = ${redondear(x4, 4)}`;
+          break;
+
+        case "(x, θ)":
+          const x5 = valor1;
+          const thetaRad5 = valor2 * Math.PI / 180;
+          const r5 = Math.abs(x5 / Math.cos(thetaRad5));
+          const y5 = x5 * Math.tan(thetaRad5);
+          res += `r = x / cos(θ) = ${redondear(r5, 4)}\n`;
+          res += `y = x × tan(θ) = ${redondear(y5, 4)}`;
+          break;
+
+        case "(y, θ)":
+          const y6 = valor1;
+          const thetaRad6 = valor2 * Math.PI / 180;
+          const r6 = Math.abs(y6 / Math.sin(thetaRad6));
+          const x6 = y6 / Math.tan(thetaRad6);
+          res += `r = y / sin(θ) = ${redondear(r6, 4)}\n`;
+          res += `x = y / tan(θ) = ${redondear(x6, 4)}`;
+          break;
+      }
+
+      resultado.textContent = res;
+    }
+
+    function limpiarCampos() {
+      document.getElementById("valor1").value = "";
+      document.getElementById("valor2").value = "";
+      document.getElementById("resultado").textContent = "";
+    }
+  </script>
+
+</body>
+</html>

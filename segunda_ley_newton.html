@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Segunda Ley de Newton</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f3f3f3;
+    }
+    .seccion {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    label, input {
+      display: block;
+      margin: 10px 0;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+    }
+    button {
+      margin-top: 15px;
+      margin-right: 10px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      color: white;
+      background-color: #3498db;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    .limpiar {
+      background-color: #e74c3c;
+    }
+    .limpiar:hover {
+      background-color: #c0392b;
+    }
+    .resultado {
+      margin-top: 20px;
+      white-space: pre-line;
+      font-weight: bold;
+      background: #ecf0f1;
+      padding: 15px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="seccion">
+  <h1>Segunda Ley de Newton</h1>
+
+  <label for="masa">Masa (kg):</label>
+  <input type="number" id="masa" step="any">
+
+  <label for="aceleracion">Aceleración (m/s²):</label>
+  <input type="number" id="aceleracion" step="any">
+
+  <label for="fuerza">Fuerza (N):</label>
+  <input type="number" id="fuerza" step="any">
+
+  <label for="angulo">Ángulo (°):</label>
+  <input type="number" id="angulo" step="any">
+
+  <button onclick="calcular()">Calcular</button>
+  <button class="limpiar" onclick="limpiar()">Limpiar</button>
+
+  <div id="resultado" class="resultado"></div>
+</div>
+
+<script>
+  function red2(n) { return n.toFixed(2); }
+  function red4(n) { return n.toFixed(4); }
+
+  function calcular() {
+    const m = parseFloat(document.getElementById("masa").value);
+    const a = parseFloat(document.getElementById("aceleracion").value);
+    const F = parseFloat(document.getElementById("fuerza").value);
+    const angulo = parseFloat(document.getElementById("angulo").value);
+    const res = document.getElementById("resultado");
+
+    const valores = {
+      masa: isNaN(m) ? null : m,
+      aceleracion: isNaN(a) ? null : a,
+      fuerza: isNaN(F) ? null : F,
+      angulo: isNaN(angulo) ? null : angulo
+    };
+
+    const noNulos = Object.values(valores).filter(v => v !== null);
+    if (noNulos.length !== 3) {
+      res.textContent = "Por favor, ingrese tres valores.";
+      return;
+    }
+
+    if (Object.values(valores).some(v => v !== null && v < 0)) {
+      res.textContent = "No se permiten valores negativos.";
+      return;
+    }
+
+    if (valores.angulo !== null && (valores.angulo < 0 || valores.angulo > 90)) {
+      res.textContent = "El ángulo debe estar entre 0° y 90°.";
+      return;
+    }
+
+    const rad = valores.angulo !== null ? valores.angulo * Math.PI / 180 : null;
+
+    if (valores.masa !== null && valores.aceleracion !== null && rad !== null) {
+      const Fcalc = (valores.masa * valores.aceleracion) / Math.cos(rad);
+      res.textContent = `Fuerza: ${red2(Fcalc)} N\nFórmula: F = (m × a) / cos(θ)`;
+    } else if (valores.aceleracion !== null && valores.fuerza !== null && rad !== null) {
+      const mcalc = (valores.fuerza * Math.cos(rad)) / valores.aceleracion;
+      res.textContent = `Masa: ${red4(mcalc)} kg\nFórmula: m = (F × cos(θ)) / a`;
+    } else if (valores.masa !== null && valores.fuerza !== null && rad !== null) {
+      const acalc = (valores.fuerza * Math.cos(rad)) / valores.masa;
+      res.textContent = `Aceleración: ${red4(acalc)} m/s²\nFórmula: a = (F × cos(θ)) / m`;
+    } else if (valores.masa !== null && valores.aceleracion !== null && valores.fuerza !== null) {
+      const anguloCalc = Math.acos((valores.masa * valores.aceleracion) / valores.fuerza) * (180 / Math.PI);
+      res.textContent = `Ángulo: ${red2(anguloCalc)}°\nFórmula: θ = arccos((m × a) / F)`;
+    } else {
+      res.textContent = "No se pudo identificar una combinación válida.";
+    }
+  }
+
+  function limpiar() {
+    ["masa", "aceleracion", "fuerza", "angulo"].forEach(id => document.getElementById(id).value = "");
+    document.getElementById("resultado").textContent = "";
+  }
+</script>
+
+</body>
+</html>

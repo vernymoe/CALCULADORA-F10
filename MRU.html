@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Movimiento Rectilíneo Uniforme</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+    h1 {
+      color: #2c3e50;
+    }
+    .seccion {
+      border: 1px solid #ccc;
+      padding: 20px;
+      margin-bottom: 30px;
+      border-radius: 10px;
+      background-color: #fff;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+    input {
+      padding: 6px;
+      width: 100%;
+      max-width: 300px;
+      margin-top: 5px;
+    }
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    .resultado {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Movimiento Rectilíneo Uniforme (MRU)</h1>
+
+  <div class="seccion">
+    <h2>Cálculo MRU</h2>
+
+    <label for="velocidad">Velocidad (m/s):</label>
+    <input type="number" id="velocidad" placeholder="Deja en blanco si deseas calcularla">
+
+    <label for="distancia">Distancia (m):</label>
+    <input type="number" id="distancia" placeholder="Deja en blanco si deseas calcularla">
+
+    <label for="tiempo">Tiempo (s):</label>
+    <input type="number" id="tiempo" placeholder="Deja en blanco si deseas calcularlo">
+
+    <button onclick="calcularMRU()">Calcular</button>
+
+    <div id="resultadoMRU" class="resultado"></div>
+  </div>
+
+  <div class="seccion">
+    <h2>Velocidad Media</h2>
+
+    <label for="xi">Posición Inicial (m):</label>
+    <input type="number" id="xi">
+
+    <label for="xf">Posición Final (m):</label>
+    <input type="number" id="xf">
+
+    <label for="ti">Tiempo Inicial (s):</label>
+    <input type="number" id="ti">
+
+    <label for="tf">Tiempo Final (s):</label>
+    <input type="number" id="tf">
+
+    <button onclick="calcularVelocidadMedia()">Calcular Velocidad Media</button>
+
+    <div id="resultadoVelMedia" class="resultado"></div>
+  </div>
+
+  <script>
+    function redondear(valor, decimales) {
+      return valor.toFixed(decimales);
+    }
+
+    function calcularMRU() {
+      const v = parseFloat(document.getElementById("velocidad").value);
+      const d = parseFloat(document.getElementById("distancia").value);
+      const t = parseFloat(document.getElementById("tiempo").value);
+      const resultado = document.getElementById("resultadoMRU");
+
+      const valores = [v, d, t].filter(val => !isNaN(val));
+
+      if (valores.length !== 2) {
+        resultado.textContent = "Por favor, ingresa dos valores para calcular el tercero.";
+        return;
+      }
+
+      if (isNaN(v)) {
+        const res = d / t;
+        resultado.textContent = `v = d / t = ${d} / ${t} = ${redondear(res, 2)} m/s`;
+      } else if (isNaN(d)) {
+        const res = v * t;
+        resultado.textContent = `d = v × t = ${v} × ${t} = ${redondear(res, 2)} m`;
+      } else if (isNaN(t)) {
+        const res = d / v;
+        resultado.textContent = `t = d / v = ${d} / ${v} = ${redondear(res, 4)} s`;
+      }
+    }
+
+    function calcularVelocidadMedia() {
+      const xi = parseFloat(document.getElementById("xi").value);
+      const xf = parseFloat(document.getElementById("xf").value);
+      const ti = parseFloat(document.getElementById("ti").value);
+      const tf = parseFloat(document.getElementById("tf").value);
+      const resultado = document.getElementById("resultadoVelMedia");
+
+      if ([xi, xf, ti, tf].some(val => isNaN(val))) {
+        resultado.textContent = "Por favor, ingresa todos los valores para calcular la velocidad media.";
+        return;
+      }
+
+      if (tf === ti) {
+        resultado.textContent = "El tiempo inicial y final no pueden ser iguales.";
+        return;
+      }
+
+      const vm = (xf - xi) / (tf - ti);
+      resultado.textContent = `vm = (xf - xi) / (tf - ti) = (${xf} - ${xi}) / (${tf} - ${ti}) = ${redondear(vm, 2)} m/s`;
+    }
+  </script>
+
+</body>
+</html>

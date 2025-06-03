@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Gráficas d-t y v-t</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f4f6f7;
+    }
+    .seccion {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    label, input {
+      display: block;
+      margin: 10px 0;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+    }
+    .radio {
+      margin: 10px 0;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 10px 5px 0 0;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      color: white;
+      background-color: #3498db;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    .limpiar {
+      background-color: #e74c3c;
+    }
+    .limpiar:hover {
+      background-color: #c0392b;
+    }
+    .resultado {
+      margin-top: 20px;
+      white-space: pre-line;
+      font-weight: bold;
+      background: #ecf0f1;
+      padding: 15px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="seccion">
+  <h1>Gráficas d-t y v-t</h1>
+
+  <div class="radio">
+    <label><input type="radio" name="tipoGrafica" value="dt"> Distancia vs Tiempo (d-t)</label>
+    <label><input type="radio" name="tipoGrafica" value="vt"> Velocidad vs Tiempo (v-t)</label>
+  </div>
+
+  <label for="x1">Punto 1 - Tiempo (x1):</label>
+  <input type="number" id="x1" step="any">
+
+  <label for="y1">Punto 1 - Valor (y1):</label>
+  <input type="number" id="y1" step="any">
+
+  <label for="x2">Punto 2 - Tiempo (x2):</label>
+  <input type="number" id="x2" step="any">
+
+  <label for="y2">Punto 2 - Valor (y2):</label>
+  <input type="number" id="y2" step="any">
+
+  <button onclick="calcularGrafica()">Calcular</button>
+  <button class="limpiar" onclick="limpiarCampos()">Limpiar</button>
+
+  <div id="resultado" class="resultado">Resultado:</div>
+</div>
+
+<script>
+  function red4(n) { return n.toFixed(4); }
+  function red2(n) { return n.toFixed(2); }
+
+  function calcularGrafica() {
+    const tipo = document.querySelector('input[name="tipoGrafica"]:checked');
+    const x1 = parseFloat(document.getElementById("x1").value);
+    const y1 = parseFloat(document.getElementById("y1").value);
+    const x2 = parseFloat(document.getElementById("x2").value);
+    const y2 = parseFloat(document.getElementById("y2").value);
+    const res = document.getElementById("resultado");
+
+    if (!tipo) {
+      res.textContent = "Seleccione un tipo de gráfica.";
+      return;
+    }
+
+    if ([x1, y1, x2, y2].some(isNaN)) {
+      res.textContent = "Por favor, ingrese valores válidos.";
+      return;
+    }
+
+    if (x1 < 0 || x2 < 0) {
+      res.textContent = "Los valores de tiempo no pueden ser negativos.";
+      return;
+    }
+
+    if (x1 > x2) {
+      res.textContent = "Valores de tiempo incorrectos (x1 no puede ser mayor que x2).";
+      return;
+    }
+
+    if (tipo.value === "dt") {
+      if (y1 === y2) {
+        res.textContent = "Velocidad igual a cero. El objeto está en reposo.";
+      } else {
+        const v = (y2 - y1) / (x2 - x1);
+        res.textContent = `Velocidad media: ${red4(v)} m/s\nFórmula: vm = (df - di) / (tf - ti)`;
+      }
+    } else if (tipo.value === "vt") {
+      if (y1 === 0 && y2 === 0) {
+        res.textContent = "El objeto está en reposo.";
+      } else if (y1 === y2) {
+        const d = ((y2 + y1) * (x2 - x1)) / 2;
+        res.textContent = `Velocidad constante. Aceleración = 0\nDesplazamiento: ${red2(d)} m\nFórmula: d = Área bajo la curva`;
+      } else {
+        const a = (Math.abs(y2) - Math.abs(y1)) / (x2 - x1);
+        const d = ((y2 + y1) * (x2 - x1)) / 2;
+        res.textContent = `Aceleración: ${red4(a)} m/s²\nDesplazamiento: ${red2(d)} m\nFórmulas:\na = |vf - vi| / (tf - ti)\nd = Área bajo la curva`;
+      }
+    }
+  }
+
+  function limpiarCampos() {
+    ["x1", "y1", "x2", "y2"].forEach(id => document.getElementById(id).value = "");
+    document.getElementById("resultado").textContent = "Resultado:";
+    document.querySelectorAll('input[name="tipoGrafica"]').forEach(r => r.checked = false);
+  }
+</script>
+
+</body>
+</html>

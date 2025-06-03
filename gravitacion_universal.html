@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Gravitación Universal</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      padding: 20px;
+    }
+    .seccion {
+      background: white;
+      padding: 20px;
+      margin-bottom: 30px;
+      border-radius: 10px;
+      max-width: 800px;
+      margin: auto;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+    h1, h2 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    label, input, select {
+      display: block;
+      margin: 10px 0;
+      width: 100%;
+      padding: 8px;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      background-color: #3498db;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    .resultado {
+      margin-top: 20px;
+      white-space: pre-line;
+      font-weight: bold;
+      background: #ecf0f1;
+      padding: 15px;
+      border-radius: 5px;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="seccion">
+  <h1>Gravitación Universal</h1>
+
+  <label for="escenario">Selecciona un escenario:</label>
+  <select id="escenario" onchange="cambiarEscenario()">
+    <option value="fuerza">Fuerza gravitacional</option>
+    <option value="campo">Campo gravitacional</option>
+    <option value="satelites">Satélites</option>
+  </select>
+
+  <!-- Fuerza -->
+  <div id="fuerza" class="escenario">
+    <label>m1 (kg):</label><input type="text" id="f_m1">
+    <label>m2 (kg):</label><input type="text" id="f_m2">
+    <label>r (m):</label><input type="text" id="f_r">
+    <label>F (N):</label><input type="text" id="f_f">
+  </div>
+
+  <!-- Campo -->
+  <div id="campo" class="escenario hidden">
+    <label>M (kg):</label><input type="text" id="c_m">
+    <label>R (m):</label><input type="text" id="c_r">
+    <label>h (m):</label><input type="text" id="c_h">
+    <label>g (m/s²):</label><input type="text" id="c_g">
+  </div>
+
+  <!-- Satélites -->
+  <div id="satelites" class="escenario hidden">
+    <label>Masa del planeta (kg):</label><input type="text" id="s_m">
+    <label>Radio del planeta (m):</label><input type="text" id="s_r">
+    <label>Altura de la órbita (m):</label><input type="text" id="s_h">
+  </div>
+
+  <button onclick="calcular()">Calcular</button>
+  <button onclick="limpiar()">Limpiar</button>
+
+  <div id="resultado" class="resultado"></div>
+</div>
+
+<script>
+  const G = 6.673e-11;
+
+  function cambiarEscenario() {
+    const valor = document.getElementById("escenario").value;
+    document.querySelectorAll(".escenario").forEach(div => div.classList.add("hidden"));
+    document.getElementById(valor).classList.remove("hidden");
+    document.getElementById("resultado").textContent = "";
+  }
+
+  function parseValor(valor) {
+    if (valor.includes("^")) {
+      const [base, exp] = valor.split("^");
+      return Math.pow(parseFloat(base), parseFloat(exp));
+    }
+    return parseFloat(valor);
+  }
+
+  function calcular() {
+    const escenario = document.getElementById("escenario").value;
+    let r = "";
+
+    if (escenario === "fuerza") {
+      const m1 = parseValor(document.getElementById("f_m1").value);
+      const m2 = parseValor(document.getElementById("f_m2").value);
+      const r_ = parseValor(document.getElementById("f_r").value);
+      const f = parseValor(document.getElementById("f_f").value);
+
+      if (m1 && m2 && r_) {
+        r = `F = ${(G * m1 * m2) / Math.pow(r_, 2)} N\nF = G·m1·m2 / r²`;
+      } else if (m1 && m2 && f) {
+        r = `r = ${Math.sqrt((G * m1 * m2) / f)} m\nr = √(G·m1·m2 / F)`;
+      } else if (m2 && r_ && f) {
+        r = `m1 = ${(f * r_**2) / (G * m2)} kg\nm1 = F·r² / (G·m2)`;
+      } else if (m1 && r_ && f) {
+        r = `m2 = ${(f * r_**2) / (G * m1)} kg\nm2 = F·r² / (G·m1)`;
+      } else {
+        r = "Datos insuficientes o incorrectos.";
+      }
+    }
+
+    else if (escenario === "campo") {
+      const m = parseValor(document.getElementById("c_m").value);
+      const R = parseValor(document.getElementById("c_r").value);
+      const h = parseValor(document.getElementById("c_h").value);
+      const g = parseValor(document.getElementById("c_g").value);
+
+      if (m && R && h) {
+        const rTotal = R + h;
+        r = `g = ${(G * m) / rTotal**2} m/s²\ng = G·m / (R + h)²`;
+      } else if (m && g && h) {
+        const Rcalc = Math.sqrt((G * m) / g) - h;
+        r = `R = ${Rcalc} m\nR = √(G·m / g) - h`;
+      } else if (m && g && R) {
+        const hCalc = Math.sqrt((G * m) / g) - R;
+        r = `h = ${hCalc} m\nh = √(G·m / g) - R`;
+      } else if (g && R && h) {
+        const rTotal = R + h;
+        const mCalc = (g * rTotal**2) / G;
+        r = `m = ${mCalc} kg\nm = g·(R + h)² / G`;
+      } else {
+        r = "Datos insuficientes o incorrectos.";
+      }
+    }
+
+    else if (escenario === "satelites") {
+      const m = parseValor(document.getElementById("s_m").value);
+      const R = parseValor(document.getElementById("s_r").value);
+      const h = parseValor(document.getElementById("s_h").value);
+
+      if (m && R && h) {
+        const rOrbita = R + h;
+        const v = Math.sqrt((G * m) / rOrbita);
+        const Ts = (2 * Math.PI * rOrbita) / v;
+        const Th = Ts / 3600;
+        r = `r = ${rOrbita} m\nv = √(G·M/r) = ${v} m/s\nT = 2πr / v = ${Ts} s\nT = ${Th} h`;
+      } else {
+        r = "Datos insuficientes o incorrectos.";
+      }
+    }
+
+    document.getElementById("resultado").textContent = r;
+  }
+
+  function limpiar() {
+    document.querySelectorAll("input").forEach(i => i.value = "");
+    document.getElementById("resultado").textContent = "";
+  }
+</script>
+
+</body>
+</html>

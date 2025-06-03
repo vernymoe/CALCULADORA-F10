@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trabajo y Energía</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Trabajo y Energía</h1>
+    <label for="section">Seleccione categoría:</label>
+    <select id="section">
+        <option>Trabajo</option>
+        <option>Teorema de Trabajo y Energía</option>
+        <option>Potencia</option>
+        <option>Energía Cinética</option>
+        <option>Energía Potencial Gravitacional</option>
+        <option>Energía Potencial Elástica</option>
+        <option>Energía Mecánica</option>
+    </select>
+
+    <div class="form-group">
+        <label id="label1" for="input1">Fuerza neta (N)</label>
+        <input type="number" id="input1">
+    </div>
+    <div class="form-group">
+        <label id="label2" for="input2">Distancia (m)</label>
+        <input type="number" id="input2">
+    </div>
+    <div class="form-group">
+        <label id="label3" for="input3">Trabajo (J)</label>
+        <input type="number" id="input3">
+    </div>
+    <div class="form-group">
+        <label id="label4" for="input4">Ángulo (°)</label>
+        <input type="number" id="input4">
+    </div>
+    <button id="calculate">Calcular</button>
+    <button id="clear">Limpiar</button>
+    <p id="result"></p>
+    <script src="script.js"></script>
+</body>
+</html>

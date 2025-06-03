@@ -1,0 +1,61 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Densidad</title>
+</head>
+<body>
+    <h2>Cálculo de Densidad</h2>
+    <p>Ingresa dos valores para calcular el tercero:</p>
+
+    <label for="densidad">Densidad (kg/m³):</label>
+    <input type="number" id="densidad" step="any"><br><br>
+
+    <label for="masa">Masa (kg):</label>
+    <input type="number" id="masa" step="any"><br><br>
+
+    <label for="volumen">Volumen (m³):</label>
+    <input type="number" id="volumen" step="any"><br><br>
+
+    <button onclick="calcularDensidad()">Calcular</button>
+    <button onclick="limpiarCampos()">Limpiar</button>
+
+    <h3 id="resultado"></h3>
+
+    <script>
+        function calcularDensidad() {
+            const densidad = parseFloat(document.getElementById('densidad').value);
+            const masa = parseFloat(document.getElementById('masa').value);
+            const volumen = parseFloat(document.getElementById('volumen').value);
+            const resultado = document.getElementById('resultado');
+
+            const valores = [densidad, masa, volumen].filter(v => !isNaN(v));
+
+            if (valores.length !== 2) {
+                resultado.innerText = "Por favor, ingresa solo dos valores para calcular el tercero.";
+                return;
+            }
+
+            if (isNaN(densidad)) {
+                const res = masa / volumen;
+                resultado.innerText = `D = m / V = ${masa} / ${volumen} = ${res.toFixed(2)} kg/m³`;
+            } else if (isNaN(masa)) {
+                const res = densidad * volumen;
+                resultado.innerText = `m = D * V = ${densidad} * ${volumen} = ${res.toFixed(2)} kg`;
+            } else if (isNaN(volumen)) {
+                const res = masa / densidad;
+                resultado.innerText = `V = m / D = ${masa} / ${densidad} = ${res.toFixed(4)} m³`;
+            }
+        }
+
+        function limpiarCampos() {
+            document.getElementById('densidad').value = "";
+            document.getElementById('masa').value = "";
+            document.getElementById('volumen').value = "";
+            document.getElementById('resultado').innerText = "";
+        }
+    </script>
+</body>
+</html>
