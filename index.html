@@ -20,10 +20,17 @@
       color: #34495e;
       margin-bottom: 30px;
     }
+    .contenedor-botones {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      justify-items: center;
+      margin-bottom: 30px;
+    }
     .boton {
       display: inline-block;
-      width: 250px;
-      margin: 10px;
+      width: 100%;
+      max-width: 250px;
       padding: 12px 20px;
       font-size: 16px;
       background-color: #3498db;
@@ -43,6 +50,11 @@
     .descarga:hover {
       background-color: #1e8449;
     }
+    .footer {
+      margin-top: 40px;
+      font-size: 14px;
+      color: #555;
+    }
   </style>
 </head>
 <body>
@@ -50,30 +62,25 @@
   <h1>Liceo San Rafael de Alajuela</h1>
   <h2>Calculadora Física 10</h2>
 
-  <div>
-    <a href="vectores.html" class="boton">Vectores</a><br>
-    <a href="MRU.html" class="boton">MRU</a><br>
-    <a href="MRUA.html" class="boton">MRUA</a><br>
-    <a href="Graficas.html" class="boton">Gráficas</a><br>
-    <a href="Caida_libre.html" class="boton">Caída Libre</a><br>
-    <a href="diagrama_cuerpo_libre.html" class="boton">Diagrama de Cuerpo Libre</a><br>
-    <a href="segunda_ley_newton.html" class="boton">Segunda Ley de Newton</a><br>
-    <a href="gravitacion_universal.html" class="boton">Gravitación Universal</a><br>
-    <a href="trabajo_energia.html" class="boton">Trabajo y Energía</a><br>
-    <a href="densidad.html" class="boton">Densidad</a><br>
+  <div class="contenedor-botones">
+    <a href="vectores.html" class="boton">Vectores</a>
+    <a href="MRU.html" class="boton">MRU</a>
+    <a href="MRUA.html" class="boton">MRUA</a>
+    <a href="Graficas.html" class="boton">Gráficas</a>
+    <a href="Caida_libre.html" class="boton">Caída Libre</a>
+    <a href="diagrama_cuerpo_libre.html" class="boton">Diagrama de Cuerpo Libre</a>
+    <a href="segunda_ley_newton.html" class="boton">Segunda Ley de Newton</a>
+    <a href="gravitacion_universal.html" class="boton">Gravitación Universal</a>
+    <a href="trabajo_energia.html" class="boton">Trabajo y Energía</a>
+    <a href="densidad.html" class="boton">Densidad</a>
+    <a href="https://drive.google.com/uc?export=download&id=15njAs4cxDTDHBlQCvAnpevvTa1DhGYxO" class="boton descarga" download>📄 Descargar folleto</a>
+    <a href="https://drive.google.com/file/d/164bOdkR_Bkq1cFFAVg6S84je84Uq91WY/view?usp=sharing" class="boton descarga" download>📄 Descargar formulario</a>
+    <a href="https://play.google.com/store/apps/details?id=com.vernyalfaroquesada.calculadorafisica" target="_blank" class="boton descarga">📱 Descargar versión Android</a>
+    <a href="https://vernymoe.github.io/CALCULADORA-F11/" target="_blank" class="boton descarga">📱 Calculadora Física 11</a>
   </div>
 
-  <div style="margin-top: 40px;">
-    <a href="https://drive.google.com/uc?export=download&id=15njAs4cxDTDHBlQCvAnpevvTa1DhGYxO" class="boton descarga" download>📄 Descargar folleto</a><br>
-    <a href="https://drive.google.com/file/d/164bOdkR_Bkq1cFFAVg6S84je84Uq91WY/view?usp=sharing" class="boton descarga" download>📄 Descargar formulario</a><br>
-    <a href="https://play.google.com/store/apps/details?id=com.vernyalfaroquesada.calculadorafisica" target="_blank" class="Enlace F111">
-   
-    📱 Descargar versión Android</a><br>
-     <a href="https://vernymoe.github.io/CALCULADORA-F11/" target="_blank" class="boton descarga">
-   
-    📱 Calculadora Física 11</a><br>
-
-
+  <div class="footer">
+    Prof. Verny Alfaro Quesada • <a href="mailto:vernymoe@gmail.com">vernymoe@gmail.com</a>
   </div>
 
 </body>
